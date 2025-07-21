@@ -1,3 +1,21 @@
+code/protein_GWAS/.nextflow*
+
+code/protein_GWAS/.nextflow/*
+
+code/protein_GWAS/work/*
+
+data/*
+
+n/*
+
+*.out
+*.err
+*.png
+*.pdf
+*.xlsx
+*.swp
+
+nextflow
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,5 +1,5 @@
 // Necessary folders and commands
-conda='eval "\$(/home/b/bl212/y/micromamba shell hook --shell bash)"'
+conda='eval "\$(/home/bmasango/.local/bin/micromamba shell hook --shell bash)"'
 activate="${conda}; micromamba activate regenie"
 data_dir="../../data"
 raw="${data_dir}/raw"
@@ -11,28 +11,23 @@ process get_proteins{
     publishDir "$intermediate", mode:"rellink"
     output:
         path "proteins.tsv", emit: "pheno"
-        path "proteomics_map.tsv", emit: "map"
     script:
     """
     ${activate}
     get_proteins.R \
-        --output proteins.tsv \
-        --mapping-file proteomics_map.tsv
+        --output proteins.tsv 
     """
 }
 
 process get_covars{
     executor="local"
     publishDir "$intermediate", mode:"rellink"
-    input:
-        path proteins
-        path map
     output:
         path "proteins.covars.tsv", emit: "covars"
     script:
     """
     ${activate}
-    get_covars.R ${proteins} ${map} \
+    get_covars.R \
         --output proteins.covars.tsv
     """
 }
@@ -115,7 +110,7 @@ process create_regenie_script{
 
 workflow {
     proteins = get_proteins()
-    covars = get_covars(proteins.pheno, proteins.map)
+    covars = get_covars()
     geno_covars = get_GWAS_covars()
     
     proteins = residualise(proteins.pheno, covars.covars) \

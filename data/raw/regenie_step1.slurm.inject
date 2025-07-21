@@ -1,27 +1,25 @@
 #!/bin/bash
 
 #SBATCH --job-name=${JOB_NAME.inject}
-#SBATCH --account=gen1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
-#SBATCH --time=10:00:00
+#SBATCH --time=72:00:00
 #SBATCH --output=slurm_out/%x-%A_%a.out
 #SBATCH --export=None
 
 module load plink2/2.00a4.3-tm3zpke
-eval "$(/home/b/bl212/y/micromamba shell hook --shell bash)"; micromamba activate regenie
+eval "$( /home/bmasango/.local/bin/micromamba shell hook --shell bash)"; micromamba activate regenie
 
 ## Plink preparation
 # Set FID to IID in the plink files
-awk -i inplace '{$1 = $2; print}' ../raw/tmp/EXCEED_freeze2_genotyped_TOPMed_b38.fam
 
 mkdir plink_files
 PLINK_OUT=plink_files/EXCEED_freeze2.ind_filtered
 
 plink2 \
-    --bfile ../raw/tmp/EXCEED_freeze2_genotyped_TOPMed_b38 \
+    --bfile /spaces/bmasango/bmasango/PGSfiles/genoz \
     --keep ${PHENO.inject} --double-id \
     --make-bed \
     --out ${PLINK_OUT}
@@ -38,11 +36,11 @@ mkdir regenie_step1
 
 regenie \
     --step 1 \
+    --force-step1 \
     --bed ${PLINK_OUT} \
     --extract ${PLINK_OUT}.snplist \
     --covarFile ${COVAR.inject} \
-    --covarColList PC{1:10} \
-    --catCovarList batch \
+    --covarColList pc{1:10} \
     --phenoFile ${PHENO.inject} \
     --bsize 1000 \
     --lowmem \
