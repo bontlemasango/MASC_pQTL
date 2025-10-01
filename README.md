@@ -35,3 +35,12 @@ Changes from the original:
   - Files for the ALICE filesystem must be copied from /rfs to /scratch before running the regenie script, and subsequently deleted
   - PCA creation and analysis needs to be added (use plink/genotyped)
   - Some files will need to be mapped to their appropriate barcode values \(\_b0 or \_b123\)
+
+## Versions of GCTA and PLINK
+GCTA (Genome-wide Complex Trait Analysis) 
+Version v1.94.1 Linux 
+Built at Jan 16 2024 14:19:02, by GCC 8.3 (C) 2010-present, Yang Lab, Westlake University 
+
+PLINK v1.9.0-b.7.7 64-bit (22 Oct 2024) 
+cog-genomics.org/plink/1.9/ (C) 2005-2024 
+Shaun Purcell, Christopher Chang GNU General Public License v3
