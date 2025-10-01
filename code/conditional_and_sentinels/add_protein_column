@@ -1,0 +1,9 @@
+for file in *.jma.cojo; do
+    # Extract protein name (last part of filename before .jma.cojo)
+    protein=$(basename "$file" .jma.cojo | awk -F'_' '{print $NF}')
+    
+    # Append column
+    awk -v prot="$protein" 'NR==1 {print $0 "\tProtein"; next} {print $0 "\t" prot}' "$file" > tmp && mv tmp "$file"
+    
+    echo "Updated $file with protein = $protein"
+done

@@ -1,0 +1,7 @@
+# Create merged file with header from the first file
+head -n 1 $(ls *.jma.cojo | head -n 1) > conditional_analysis.txt
+
+# Append all files (skipping headers after the first)
+for file in *.jma.cojo; do
+    tail -n +2 "$file" >> conditional_analysis.txt
+done

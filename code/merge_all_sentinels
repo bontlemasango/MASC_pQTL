@@ -1,0 +1,8 @@
+# write header first (adding "protein" column)
+head -n1 chr_1_TNFSF13B_sentinels.txt | awk '{print $0, "protein"}' OFS="\t" > all_sentinels_merged.txt
+
+# loop over all sentinel files and append with protein column
+for f in chr*_sentinels.txt; do
+    protein=$(echo "$f" | sed -E 's/^chr_[0-9]+_([^_]+)_sentinels.txt$/\1/')
+    awk -v p="$protein" 'NR>1 {print $0, p}' OFS="\t" "$f" >> all_sentinels_merged.txt
+done
