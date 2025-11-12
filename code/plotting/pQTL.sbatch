@@ -12,4 +12,4 @@
 #SBATCH --export=None
 
 eval "$(/home/bmasango/.local/bin/micromamba  shell hook --shell bash)"; micromamba activate regenie
-python pQTL.py ../../data/processed/regenie_step2 hgnc_ucsc_b38_genes.tsv --genename
+python pQTL.py ../../data/processed/regenie_step2 hgnc_masc_protein_id.tsv --genename --output pqtl_plot_correct.png

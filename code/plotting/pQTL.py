@@ -20,7 +20,8 @@ args = parser.parse_args()#['/data/gen1/Brandon_PhD/proteomic_GWAS_freeze2/data/
 all_files = os.listdir(args.folder)
 all_proteins = pd.DataFrame(dict(filename=all_files))
 all_proteins = (all_proteins
-        .query('filename!="log_files"'))
+        .query('filename!="log_files"')
+        .query('filename.str.endswith(".regenie")'))
 all_proteins = (all_proteins
         .query('~filename.str.endswith(".log")')
                 .assign(chromosome=all_proteins['filename'].str.split('_').str[1].replace('X', 23).astype(int))
