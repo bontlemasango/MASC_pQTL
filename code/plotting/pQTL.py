@@ -27,19 +27,23 @@ all_proteins = (all_proteins
                 .assign(chromosome=all_proteins['filename'].str.split('_').str[1].replace('X', 23).astype(int))
                 .assign(protein_id=all_proteins['filename'].str.replace('^chr_.*?_', '', regex=True).replace('.regenie$','', regex=True))
                 .sort_values(['protein_id','chromosome'])
+                .eval('hgnc_id = protein_id.str.replace(".","")')
                )
 all_proteins['chromosome'] = all_proteins['chromosome'].astype(int)
 
 hgnc = pd.read_csv(args.hgnc_file, sep='\t', usecols=['chrom', 'chromStart','symbol','geneName','uniprot_ids','mane_select'])
 hgnc = hgnc.query('~uniprot_ids.isna()')
-hgnc ['symbol'] = hgnc ['symbol'].str.replace('-','.')
+hgnc ['symbol'] = hgnc ['symbol'].str.replace('-','.').str.replace('.','')
 
 mydir = lambda x: os.path.join(args.folder, x)
-def read_dfs(protein_id):
+def read_dfs(protein_id, custom_identifier=None):
     protein = all_proteins.query('protein_id==@protein_id')
     dfs = [pd.read_csv(mydir(x), sep=' ', usecols=['CHROM','GENPOS', 'LOG10P']).query('LOG10P>3') for x in protein['filename']]
     df = pd.concat(dfs)
-    df['PROTEIN'] = protein_id
+    if custom_identifier is None:
+        df['PROTEIN'] = protein_id
+    else:
+        df['PROTEIN'] = custom_identifier
     return df
 
 
@@ -174,10 +178,8 @@ def pQTL(df, ax, sub_pthresh=5*10**-6, pthresh=5*10**-8,
 
 
 gwas_df = []
-for i, protein in enumerate(all_proteins['protein_id'].unique()):
-    gwas_df.append(read_dfs(protein))
-    if i>1:
-        break
+for i, row in all_proteins.drop_duplicates(['protein_id']).reset_index().iterrows():
+    gwas_df.append(read_dfs(row['protein_id'], row['hgnc_id'])
 gwas_df = pd.concat(gwas_df)
 
 plot_df = merge_datasets(gwas_df, hgnc).pipe(calculate_x_axis)
