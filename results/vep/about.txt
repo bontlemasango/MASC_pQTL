@@ -1,0 +1,6 @@
+Completed using the VEP online tool version 115 GRCh38 available here: `https://www.ensembl.org/Tools/VEP`
+
+Equivalent commandline command:
+`./vep --af --appris --biotype --buffer_size 500 --canonical --check_existing --distance 5000 --mane --polyphen b --protein --pubmed --regulatory --show_ref_allele --sift b --species homo_sapiens --symbol --transcript_version --tsl --uniprot --uploaded_allele --cache --input_file [input_data] --output_file [output_file]`
+
+
